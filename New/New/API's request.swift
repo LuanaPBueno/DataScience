@@ -10,17 +10,6 @@ import Foundation
 
 // Função que faz a busca de todos os filmes do BechdelTest e retorna a lista de filmes ordenados
 func bechdelSearch(isMock: Bool) async throws -> [WelcomeElement] {
-    
-    if isMock == true {
-        
-        let urlString = Bundle.main.url(forResource: "movies", withExtension: "json")
-        let data = try Data(contentsOf: urlString!)
-        var welcome = try JSONDecoder().decode([WelcomeElement].self, from: data)
-        welcome = welcome.filter { $0.year >= 1930 }
-        welcome.sort { $0.year < $1.year }
-        return welcome
-        
-    } else {
         
         let urlString = "https://bechdeltest.com/api/v1/getAllMovies"
         
@@ -41,7 +30,7 @@ func bechdelSearch(isMock: Bool) async throws -> [WelcomeElement] {
         welcome.sort { $0.year < $1.year }
         return welcome
         
-    }
+    
 }
 
 //funcao de classificacao de filmes por pais
@@ -226,8 +215,9 @@ func getMoviesWithDetails() async throws -> [CompleteMovie] {
     // Para cada filme, pegar o imdbid e buscar os detalhes
     for movie in movies {
         do {
+            print("entrei")
             var details = try await fetchMovieDetails(for: movie.imdbid)
-            
+            print("sai")
             details.released = nil //ja que escolhemos obter só o ano do bechdelTest
             
             let completeMovie = CompleteMovie(
