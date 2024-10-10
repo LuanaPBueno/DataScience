@@ -10,7 +10,6 @@ import Foundation
 
 // Função que faz a busca de todos os filmes do BechdelTest e retorna a lista de filmes ordenados
 func bechdelSearch(isMock: Bool) async throws -> [WelcomeElement] {
-        
         let urlString = "https://bechdeltest.com/api/v1/getAllMovies"
         
         guard let url = URL(string: urlString) else {
@@ -29,7 +28,7 @@ func bechdelSearch(isMock: Bool) async throws -> [WelcomeElement] {
         // Ordenar os filmes por ano
         welcome.sort { $0.year < $1.year }
         return welcome
-        
+    
     
 }
 
@@ -184,7 +183,8 @@ func classifyMoviesFromDecadesByNames(movies: [CompleteMovie]) -> [String: [Stri
 
 // Função que faz o request no imdb dos detalhes do filme usando o imdbID
 func fetchMovieDetails(for imdbID: String) async throws -> OMDbMovieDetails {
-    let urlString = "https://www.omdbapi.com/?&apikey=50d0eb84&i=tt\(imdbID)"
+    //let urlString = "https://www.omdbapi.com/?&apikey=f5e35efc&i=tt\(imdbID)"
+    let urlString = "https://www.omdbapi.com/?i=tt\(imdbID)&apikey=f5e35efc"
     guard let url = URL(string: urlString) else {
         throw URLError(.badURL)
     }
@@ -215,9 +215,7 @@ func getMoviesWithDetails() async throws -> [CompleteMovie] {
     // Para cada filme, pegar o imdbid e buscar os detalhes
     for movie in movies {
         do {
-            print("entrei")
             var details = try await fetchMovieDetails(for: movie.imdbid)
-            print("sai")
             details.released = nil //ja que escolhemos obter só o ano do bechdelTest
             
             let completeMovie = CompleteMovie(
@@ -227,6 +225,7 @@ func getMoviesWithDetails() async throws -> [CompleteMovie] {
                 imdbid: movie.imdbid,
                 details: details
             )
+            print(completeMovie)
             completeMovies.append(completeMovie)
         } catch {
             print("Erro ao buscar detalhes do filme \(movie.title): \(error)")
